@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelulusan 2024/2025</title>
+  <style>
+    :root {
+      --primary-color: #1e3c72;
+      --secondary-color: #2a5298;
+      --bg-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      --text-color: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 460px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 28px 18px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      backdrop-filter: blur(6px);
+    }
+
+    h1, h2 {
+      margin-bottom: 14px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    input {
+      background-color: #f0f0f0;
+      color: #000;
+    }
+
+    button {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--text-color);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      margin-top: 18px;
+      font-weight: 500;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="sambutanPage">
+    <h1>Pengumuman Kelulusan SD/SMP/SMK/SMA</h1>
+    <p>Tahun Ajaran 2024/2025</p>
+    <p>Sambutan dari Kepala Sekolah</p>
+    <button id="btnCek">Cek Kelulusan</button>
+  </div>
+
+  <div class="container hidden" id="cekPage">
+    <h2>Cek Kelulusan</h2>
+    <p>Masukkan NISN:</p>
+    <input type="text" id="nisnInput" placeholder="Masukkan NISN">
+    <button onclick="cekKelulusan()">Cek</button>
+    <button onclick="kembaliKeSambutan()">Kembali</button>
+    <button id="btnCetak" class="hidden" onclick="cetakHasil()">Cetak / Simpan</button>
+    <div class="result" id="hasilKelulusan"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('btnCek').addEventListener('click', showCekKelulusan);
+    });
+
+    const dataKelulusan = [
+      { nama: "Ahmad Fauzan", nisn: "0056123456", status: "Lulus" },
+      { nama: "Siti Nurhaliza", nisn: "0056123457", status: "Lulus" },
+      { nama: "Budi Santoso", nisn: "0056123458", status: "Tidak Lulus" },
+      { nama: "Rina Amelia", nisn: "0056123459", status: "Lulus" },
+      { nama: "Andi Prasetyo", nisn: "0056123460", status: "Lulus" },
+      { nama: "Dewi Ayu", nisn: "0056123461", status: "Lulus" },
+      { nama: "Muhammad Zaki", nisn: "0056123462", status: "Lulus" },
+      { nama: "Lestari Anjani", nisn: "0056123463", status: "Lulus" },
+      { nama: "Rahmat Hidayat", nisn: "0056123464", status: "Tidak Lulus" },
+      { nama: "Nabila Khairunnisa", nisn: "0056123465", status: "Lulus" }
+    ];
+
+    function showCekKelulusan() {
+      document.getElementById('sambutanPage').classList.add('hidden');
+      document.getElementById('cekPage').classList.remove('hidden');
+    }
+
+    function kembaliKeSambutan() {
+      document.getElementById('cekPage').classList.add('hidden');
+      document.getElementById('sambutanPage').classList.remove('hidden');
+      document.getElementById('hasilKelulusan').innerText = '';
+      document.getElementById('nisnInput').value = '';
+      document.getElementById('btnCetak').classList.add('hidden');
+    }
+
+    function cekKelulusan() {
+      const nisn = document.getElementById('nisnInput').value.trim();
+      const hasil = document.getElementById('hasilKelulusan');
+      const btnCetak = document.getElementById('btnCetak');
+      const sekarang = new Date();
+      const waktuBuka = new Date("2025-05-05T18:00:00+07:00");
+
+      if (sekarang < waktuBuka) {
+        hasil.innerText = "Pengumuman kelulusan belum dimulai.\nHarap cek sesuai waktu yang telah ditentukan.";
+        btnCetak.classList.add('hidden');
+        return;
+      }
+
+      if (nisn.toLowerCase() === "admin") {
+        hasil.innerText = dataKelulusan.map(s => `${s.nama} (${s.nisn}) - ${s.status}`).join('\n');
+        hasil.style.whiteSpace = 'pre-line';
+        btnCetak.classList.remove('hidden');
+        return;
+      }
+
+      const siswa = dataKelulusan.find(s => s.nisn === nisn);
+      if (siswa) {
+        hasil.innerText = `Nama: ${siswa.nama}\nNISN: ${siswa.nisn}\nStatus: ${siswa.status}`;
+        btnCetak.classList.remove('hidden');
+      } else {
+        hasil.innerText = "Data tidak ditemukan.\nPeriksa kembali NISN Anda.";
+        btnCetak.classList.add('hidden');
+      }
+    }
+
+    function cetakHasil() {
+      const hasil = document.getElementById('hasilKelulusan').innerText;
+      if (hasil.trim() !== "") {
+        const printWindow = window.open('', '_blank');
+        printWindow.document.open();
+        printWindow.document.write(`<!DOCTYPE html>
+          <html>
+          <head><title>Hasil Kelulusan</title></head>
+          <body style="font-family: Arial; padding: 20px;">
+            <pre>${hasil}</pre>
+            <script>window.onload = function() { window.print(); }<\/script>
+          </body>
+          </html>`);
+        printWindow.document.close();
+      } else {
+        alert("Silakan cek kelulusan terlebih dahulu.");
+      }
+    }
+  </script>
+</body>
+</html>
