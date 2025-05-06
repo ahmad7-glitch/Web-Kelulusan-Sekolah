@@ -16,7 +16,7 @@ Pastikan Anda memiliki akses ke browser yang mendukung HTML5 dan JavaScript.
 ## Instalasi
 1. Clone repositori ini ke komputer Anda:
    ```bash
-   git clone https://github.com/username/Web-Kelulusan-Sekolah.git
+   git clone https://github.com/ahmad7-glitch/Web-Kelulusan-Sekolah.git
 
 
 2. Buka folder yang telah di-clone:
